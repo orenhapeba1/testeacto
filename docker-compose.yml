@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  tall-php:
+    #image: php:8.3.21-apache
+    build:
+      context: ./docker/php
+    container_name: tall-php
+    ports:
+      - 8000:8000
+      - 5173:5173
+      - 80:80
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - tall-mysql
+    networks:
+      - tail-network
+
+  tall-mysql:
+    image: mysql:8.0
+    container_name: tall-mysql
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tail-network
+
+networks:
+  tail-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
