@@ -1,0 +1,16 @@
+src/.editorconfig
+src/.env.example
+src/.gitattributes
+src/.gitignore
+src/bootstrap/cache/.gitignore
+src/database/.gitignore
+src/public/.htaccess
+src/storage/app/
+src/storage/framework/.gitignore
+src/storage/framework/cache/
+src/storage/framework/sessions/
+src/storage/framework/testing/
+src/storage/framework/views/.gitignore
+src/storage/logs/.gitignore
+src/node_modules/
+src/vendor/
