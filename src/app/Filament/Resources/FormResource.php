@@ -29,14 +29,13 @@ class FormResource extends Resource
                 Forms\Components\TextInput::make('name')
                 ->required()
                 ->disabled(fn ($record) => $record && $record->locked),
-
-                Forms\Components\Select::make('questions')
-                    ->label('Perguntas')
-                    ->multiple()
-                    ->relationship('questions', 'title')
-                    ->preload()
-                    ->required()
-                    ->disabled(fn ($record) => $record && $record->locked),
+//                Forms\Components\Select::make('questions')
+//                    ->label('Perguntas')
+//                    ->multiple()
+//                    ->relationship('questions', 'title')
+//                    ->preload()
+//                    ->required()
+//                    ->disabled(fn ($record) => $record && $record->locked),
 
             ]);
     }
@@ -97,7 +96,7 @@ class FormResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\QuestionsRelationManager::class
         ];
     }
 

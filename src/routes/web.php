@@ -23,10 +23,10 @@ use App\Filament\Pages\ViewFormResponses;
 |
 */
 
-
 Route::view('/', 'welcome')->name('home');
+Route::view('/teste', 'teste')->name('teste');
 
-Route::get('/responder-formulario/{form}', FillForm::class)->name('form.fill');
+Route::get('/responder-formulario/{formulario}', FillForm::class)->name('form.fill');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)

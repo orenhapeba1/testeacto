@@ -2,8 +2,9 @@ FROM php:8.2-fpm
 
 # Instala extensões do PHP e dependências do sistema
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev npm libicu-dev docker-php-ext-configure intl docker-php-ext-install intl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev npm libicu-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-configure intl docker-php-ext-install intl
 
 # Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \

@@ -1,29 +1,66 @@
 <?php
+
 namespace App\Livewire;
 
 use App\Models\Form;
 use App\Models\Answer;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Livewire\Component;
 use Illuminate\Support\Str;
 
-class FillForm extends Component
+class FillForm extends Component implements HasForms
 {
-    public Form $form;
+    use InteractsWithForms;
+
+    public ?array $data = [];
+
+
+    public $formulario;
     public array $responses = [];
 
-    public function mount(Form $form)
+    public function mount(Form $formulario)
     {
-    
-        $this->form = $form;
+        $this->formulario = $formulario;
+        $this->form->fill();
+//        $this->form = $form;
+//
+//        // Inicializa campos
+//        foreach ($form->questions as $question) {
+//            $this->responses[$question->id] = null;
+//        }
+    }
 
-        // Inicializa campos
-        foreach ($form->questions as $question) {
-            $this->responses[$question->id] = null;
+    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    {
+        return $form
+            ->schema($this->getQuestions())
+            ->statePath('data');
+    }
+
+    public function getQuestions(): array
+    {
+        $questoes = [];
+        foreach ($this->formulario->questions as $question) {
+            if ($question->type === 'text') {
+                $questoes[] = TextInput::make($question->id)
+                    ->label($question->title)
+                    ->columnSpanFull();
+            } elseif ($question->type === 'multiple_choice') {
+                $questoes[] = Select::make($question->id)
+                    ->label($question->title)
+                    ->options(json_decode($question->options, true))
+                    ->columnSpanFull();
+            }
         }
+        return $questoes;
     }
 
     public function save()
     {
+//        dd($this->form->getState());
         $token_answer = $token_answer = Str::random(32);
         foreach ($this->form->questions as $question) {
             $answer = $this->responses[$question->id];
@@ -50,6 +87,6 @@ class FillForm extends Component
 
     public function render()
     {
-        return view('livewire.fill-form')->with('layout', 'layouts.app');
+        return view('livewire.fill-form')->layout('layouts.app');
     }
 }

@@ -5,30 +5,37 @@ namespace App\Filament\Pages;
 use App\Models\Form;
 use App\Models\Answer;
 use Filament\Pages\Page;
-use Livewire\Component;
 use Filament\Forms;
 
 class ViewResponseForm extends Page
 {
+
+    use Forms\Concerns\InteractsWithForms;
+
     protected static ?string $navigationIcon = 'heroicon-o-eye';
     protected static ?string $navigationLabel = 'Respostas por Formulário';
     protected static string $view = 'filament.pages.view-response-form';
 
     public $forms;
-    public $selectedForm = null;
+    public $formulario;
     public $respostasAgrupadas = [];
+
+
+    public ?array $data = [];
 
     public function mount(): void
     {
         $this->forms = Form::with('questions')
-        ->where('locked', true)
-        ->get();
+            ->where('locked', true)
+            ->get();
+
+        $this->form->fill();
     }
 
     public function updatedSelectedForm($formId)
     {
         $this->selectedForm = Form::where('id', $formId)
-        ->where('locked', true);
+            ->where('locked', true);
 
         $this->respostasAgrupadas = Answer::with('question')
             ->where('form_id', $formId)
@@ -36,12 +43,32 @@ class ViewResponseForm extends Page
             ->groupBy('token_answer');
     }
 
-    protected function getViewData(): array
+
+    public function form(Forms\Form $form): Forms\Form
     {
-        return [
-            'forms' => $this->forms,
-            'selectedForm' => $this->selectedForm,
-            'respostasAgrupadas' => $this->respostasAgrupadas,
-        ];
+        return $form
+            ->schema([
+                Forms\Components\Section::make()
+                    ->schema([
+                        Forms\Components\Grid::make(['sm' => 12])->schema([
+                            Forms\Components\Select::make('selectedForm')
+                                ->label('Formulários')
+                                ->live()
+                                ->options(fn()=>Form::query()->pluck('name', 'id')->toArray())
+                                ->afterStateUpdated(function($state){
+                                    $this->formulario = Form::query()->find($state);
+                                })
+                                ->required()
+                                ->columnSpan([
+                                    'lg' => 4,
+                                    'md' => 6,
+                                    'sm' => 12,
+                                ])
+                        ])
+                    ])
+            ])
+            ->statePath('data');
     }
+
+
 }
