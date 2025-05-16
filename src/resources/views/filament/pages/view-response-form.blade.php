@@ -34,15 +34,15 @@
             <!-- Seu código existente -->
             @if (!empty($this->data['selectedForm']))
                 <h2 class="text-xl font-bold mt-6">Respostas para: {{ $this->formulario->name }}</h2>
-
+                
                 @forelse ($this->formulario->answers as $token => $respostas)
                     <div class="border rounded p-4 mb-4 bg-white shadow">
                         <h3 class="text-lg font-semibold text-blue-600">Token: {{ $token }}</h3>
 
                         <ul class="mt-2 space-y-2">
-                            @foreach ($respostas as $resposta)
+                            @foreach ($respostas->original as $resposta)
                                 <li>
-                                    <strong>{{ $resposta->question->title }}:</strong>
+                                    <strong>{{ $resposta->question_id }}:</strong>
                                     {{ $resposta->answer }}
                                 </li>
                             @endforeach

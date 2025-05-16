@@ -29,13 +29,6 @@ class FormResource extends Resource
                 Forms\Components\TextInput::make('name')
                 ->required()
                 ->disabled(fn ($record) => $record && $record->locked),
-//                Forms\Components\Select::make('questions')
-//                    ->label('Perguntas')
-//                    ->multiple()
-//                    ->relationship('questions', 'title')
-//                    ->preload()
-//                    ->required()
-//                    ->disabled(fn ($record) => $record && $record->locked),
 
             ]);
     }
@@ -58,12 +51,6 @@ class FormResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                 ->disabled(fn ($record) => $record && $record->locked),
-                // Tables\Actions\Action::make('Ver Respostas')
-                // ->label('Ver Respostas')
-                // ->color('success')
-                // ->icon('heroicon-o-eye')
-                // ->url(fn ($record) => route('filament.admin.pages.view-response-form', ['formId' => $record->id]))
-                // ->visible(fn ($record) => $record && $record->locked),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
