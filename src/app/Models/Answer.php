@@ -15,16 +15,16 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['form_id', 'question_id', 'token_answer', 'answer'];
+    protected $fillable = ['form_id', 'question_id', 'token_answer', 'answer','question_json'];
 
     public function form()
     {
-        return $this->belongsTo(Form::class);
+        return $this->belongsTo(Form::class,'form_id');
     }
 
     public function question()
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Question::class,'question_id');
     }
     
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->foreignId('question_id')->constrained()->onDelete('cascade');
             $table->string('token_answer')->required(); // token do usuário
+            $table->string('question_json')->required(); // token do usuário
             $table->text('answer'); // texto ou valor da opção
             $table->timestamps();
         });

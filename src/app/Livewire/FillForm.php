@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Form;
 use App\Models\Answer;
+use App\Models\Question;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -19,26 +21,28 @@ class FillForm extends Component implements HasForms
 
 
     public $formulario;
+    public $token;
     public array $responses = [];
 
     public function mount(Form $formulario)
     {
         $this->formulario = $formulario;
         $this->form->fill();
-
     }
 
     public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
     {
         return $form
-            ->schema($this->getQuestions())
+            ->schema([self::getQuestions($this->formulario)])
             ->statePath('data');
     }
 
-    public function getQuestions(): array
+    public static function getQuestions($formulario)
     {
+
         $questoes = [];
-        foreach ($this->formulario->questions as $question) {
+
+        foreach ($formulario->questions as $question) {
             if ($question->type === 'text') {
                 $questoes[] = TextInput::make($question->id)
                     ->label($question->title)
@@ -53,7 +57,11 @@ class FillForm extends Component implements HasForms
                     ->columnSpanFull();
             }
         }
-        return $questoes;
+
+        return Grid::make()
+            ->columns(1)
+            ->schema($questoes)
+            ->columnSpanFull();
     }
 
     public function save()
@@ -66,11 +74,13 @@ class FillForm extends Component implements HasForms
                 $this->addError('responses.' . $question->id, 'Campo obrigatório.');
             }
 
+            $questionData = json_encode(Question::query()->find($question->id)->toArray());
             Answer::create([
                 'form_id' => $this->formulario->id,
                 'question_id' => $question->id,
                 'token_answer' => $token_answer,
                 'answer' => is_array($answer) ? json_encode($answer) : $answer,
+                'question_json' => $questionData
             ]);
         }
 
