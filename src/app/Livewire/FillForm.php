@@ -83,6 +83,6 @@ class FillForm extends Component implements HasForms
 
     public function render()
     {
-        return view('livewire.fill-form')->layout('layouts.teste');
+        return view('livewire.fill-form')->layout('layouts.app');
     }
 }
