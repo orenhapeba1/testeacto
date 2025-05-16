@@ -1,4 +1,4 @@
-@extends('layouts.teste')
+@extends('layouts.base')
 
 @section('body')
     @yield('content')

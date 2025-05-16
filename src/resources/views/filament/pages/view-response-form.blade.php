@@ -1,57 +1,36 @@
+{{-- resources/views/filament/pages/view-response-form.blade.php --}}
 <x-filament::page>
-    <style>
-        .animate-spin {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
     <div class="space-y-6">
-        {{--        <form wire:submit.prevent>--}}
-        {{--            <x-filament::forms>--}}
-        {{--                <select--}}
-        {{--                        label="Selecione um formulário"--}}
-        {{--                        wire:model="selectedForm"--}}
-        {{--                >--}}
-        {{--                    <option value="">-- Escolha --</option>--}}
-        {{--                    @foreach($forms as $form)--}}
-        {{--                        <option value="{{ $form->id }}">{{ $form->name }}</option>--}}
-        {{--                    @endforeach--}}
-        {{--                </select>--}}
-        {{--            </x-filament::forms>--}}
-        {{--        </form>--}}
-        {{$this->form}}
+        {{-- Renderiza o formulário Filament --}}
+        {{ $this->form }}
 
-        <div>
+        @if ($formulario)
+            <x-filament::section>
+                <x-slot name="title">
+                    Respostas do formulário: <strong>{{ $formulario->name }}</strong>
+                </x-slot>
 
-            <!-- Seu código existente -->
-            @if (!empty($this->data['selectedForm']))
-                <h2 class="text-xl font-bold mt-6">Respostas para: {{ $this->formulario->name }}</h2>
-                
-                @forelse ($this->formulario->answers as $token => $respostas)
-                    <div class="border rounded p-4 mb-4 bg-white shadow">
-                        <h3 class="text-lg font-semibold text-blue-600">Token: {{ $token }}</h3>
+                @forelse ($respostasAgrupadas as $token => $respostas)
+                    <x-filament::card class="mb-4">
+                        <h3 class="text-lg font-bold text-primary">Token: {{ $token }}</h3>
 
-                        <ul class="mt-2 space-y-2">
-                            @foreach ($respostas->original as $resposta)
-                                <li>
-                                    <strong>{{ $resposta->question_id }}:</strong>
-                                    {{ $resposta->answer }}
-                                </li>
+                        <div class="space-y-2 mt-4">
+                            @foreach ($respostas as $resposta)
+                                <div class="border p-4 rounded-md bg-gray-50">
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Pergunta:</strong> {{ $resposta->question->title ?? 'Pergunta não encontrada' }}
+                                    </p>
+                                    <p class="text-sm text-gray-800">
+                                        <strong>Resposta:</strong> {{ $resposta->answer }}
+                                    </p>
+                                </div>
                             @endforeach
-                        </ul>
-                    </div>
+                        </div>
+                    </x-filament::card>
                 @empty
-                    <p class="text-gray-500">Nenhuma resposta encontrada.</p>
+                    <p class="text-gray-500">Nenhuma resposta encontrada para este formulário.</p>
                 @endforelse
-            @endif
-        </div>
+            </x-filament::section>
+        @endif
     </div>
 </x-filament::page>

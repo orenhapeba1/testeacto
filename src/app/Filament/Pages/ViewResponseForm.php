@@ -41,6 +41,11 @@ class ViewResponseForm extends Page
             ->where('form_id', $formId)
             ->get()
             ->groupBy('token_answer');
+        
+            $this->respostasAgrupadas = Answer::with('question')
+            ->where('form_id', $formId)
+            ->get()
+            ->groupBy('token_answer');
     }
 
 
